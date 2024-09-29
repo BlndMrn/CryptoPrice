@@ -7,7 +7,10 @@ from CryptoPrice.utils.time import TIMEFRAME
 
 @dataclass(frozen=True)
 class Price:
-    value: float
+    high: float
+    low: float
+    open: float
+    close: float
     asset: str
     ref_asset: str
     timestamp: int
@@ -16,7 +19,10 @@ class Price:
 
 @dataclass(frozen=True)
 class MetaPrice:
-    value: float
+    high: float
+    low: float
+    open: float
+    close: float
     asset: str
     ref_asset: str
     prices: List[Union[Price, MetaPrice]]
@@ -41,7 +47,7 @@ class MetaPrice:
         for meta_price in meta_prices:
             if (asset, ref_asset) != (meta_price.asset, meta_price.ref_asset):
                 raise ValueError("asset and ref asset are inconsistent")
-            cum_value += meta_price.value
+            cum_value += meta_price.close
             source.update(meta_price.source)
         return MetaPrice(cum_value / len(meta_prices), asset, ref_asset, meta_prices, source=source)
 
@@ -66,9 +72,9 @@ class MetaPrice:
         for i, price in enumerate(price_path):
             current_asset, next_asset = assets[i:i + 2]
             if price.asset == next_asset:
-                cumulated_price /= price.value
+                cumulated_price /= price.close
             else:
-                cumulated_price *= price.value
+                cumulated_price *= price.close
             source.add(price.source)
         return MetaPrice(cumulated_price, assets[0], assets[-1], price_path, source=source)
 

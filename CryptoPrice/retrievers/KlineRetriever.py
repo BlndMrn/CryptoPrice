@@ -85,7 +85,7 @@ class KlineRetriever(AbstractRetriever):
                                       closest_open_timestamp, self.closest_window)
 
         if closest_kline is not None:
-            return Price(closest_kline.open, asset, ref_asset, closest_kline.open_timestamp, closest_kline.source)
+            return Price(closest_kline.high, closest_kline.low, closest_kline.open, closest_kline.close, asset, ref_asset, closest_kline.open_timestamp, closest_kline.source)
 
         msg = f"no Kline found for {asset}, {ref_asset}, {self.kline_timeframe.name}, {timestamp}," \
               f" w={self.closest_window}"
